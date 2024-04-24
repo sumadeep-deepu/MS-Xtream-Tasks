@@ -11,14 +11,14 @@ jsonhttp::~jsonhttp(){
 }
 void jsonhttp::onInvalidJSONRequest(HTTPServerRequest *request,HTTPConnection *connection,string &rawRequest){
 	cout<<"recived Request : "<<rawRequest<<endl;
-	string infomsg,infoid;
-	infoid=configObject["Response_onInvalidJson"]["infoid"];
+	string infomsg,infoID;
+	infoID=configObject["Response_onInvalidJson"]["infoID"];
 	infomsg=configObject["Response_onInvalidJson"]["infomsg"];
 	MSFRequest* msfreq=new MSFRequest(rawRequest);
 	MSFResponse* err=new MSFResponse(msfreq);
 	string errormsg="INVALID JSON request"+rawRequest;
 	err->addToData("error",errormsg);
-	err->setInfoID(infoid);
+	err->setInfoID(infoID);
 	err->setInfoMsg(infomsg);
 	err->setSvcName(configObject["Response_onInvalidJson"]["svcName"]);
 	err->setSvcGroup(configObject["Response_onInvalidJson"]["svcGroup"]);

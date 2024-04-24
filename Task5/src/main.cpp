@@ -3,15 +3,16 @@
 
 using namespace std;
 int main(int argc,char* argv[]){
-	if(argc!=3){
+	if(argc!=2){
 		cerr<<"Usage : "<<argv[0]<<"<JSON_file>"<<endl;
 		return 1;
 	}
-	string jsonpath=argv[1];
-	string configpath=argv[2];
-	jsonhttp *server=new jsonhttp(jsonpath,configpath);
+	string configpath=argv[1];
 	JsonApp config(configpath);
 	JsonObject object=config.getObject();
+	string jsonpath=object["Json_filepath"];
+	jsonhttp *server=new jsonhttp(jsonpath,configpath);
+
 	map<string,SBU2WebService *>* jWebService =new map<string,SBU2WebService *>;
 
 	string end_url="/Config/Base/1.0.0";
