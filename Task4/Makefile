@@ -2,7 +2,7 @@ PKG_NAME=libubacappiinfo
 PKG_VERSION=1.0.0
 UBAC_PKG_DEPENDS=libubacjsonparser.so.1.2.8
 OBJ_NAME = $(PKG_NAME).so.$(PKG_VERSION)
-install_include_dir = /usr/local/include/jsonparser
+install_include_dir = /usr/local/include/appparser
 
 LIBS = -lyajl -l:libubacjsonparser.so.1.2.8
 

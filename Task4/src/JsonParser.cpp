@@ -1,8 +1,8 @@
-#include "JsonParser.h"
-#include<iostream>
+#include "JsonParse.h"
 
 JsonApp::JsonApp(const string& filename){
 	this->filepath = filename;
+	readJsonFile();
 }
 
 JsonApp::~JsonApp(){}
@@ -16,54 +16,48 @@ void JsonApp::readJsonFile(){
 	ostringstream ss;
 	ss<<file.rdbuf();
 	jsonContent=ss.str();
+	JsonParser parser(jsonContent);
+	obj = parser.getJsonObject();
 	file.close();
 }
-void JsonApp::displayInfo(){
-	string key;
-	cout << "Enter key : ";
-	cin >> key ;
-	JsonParser parser(jsonContent);
-	JsonObject jsonObject = parser.getJsonObject();
-	JsonObject jsonInfoObject = jsonObject["info"];
-	size_t size = jsonInfoObject.size();
-	bool flag=false;
-	if( key == "all" || key == "ALL"){
-		flag=true;
-		for(size_t i = 0; i< size ; i++){
-			cout << "Key name : " << jsonInfoObject[i]["key"] <<endl;
-			cout <<"Action name: " << jsonInfoObject[i]["value"]["action"] << endl;
-			cout << "Message name: " << jsonInfoObject[i]["value"]["msg"] << endl;
+JsonObject JsonApp::getObject(){
+	return obj;
+}
+
+string JsonApp::infoOperation(string& key){
+	JsonObject jsonInfoObject=obj["info"];
+	if(key=="all"||key=="ALL"||key=="All"){
+		string output;
+		for(size_t i=0;i<jsonInfoObject.size();i++){
+			output+="Key Name : "+ jsonInfoObject[i]["key"]+"\n";
+			output+="Action Name : "+jsonInfoObject[i]["value"]["action"]+"\n";
+			output+="Message Name : "+jsonInfoObject[i]["value"]["msg"]+"\n";
+
 		}
+		return output;
 	}else{
-		for(size_t i = 0 ; i < size ; i++){
-			if(key == jsonInfoObject[i]["key"]){
-				flag=true;
-				cout<<"Key name :"<<jsonInfoObject[i]["key"]<<endl;
-				cout<<"Action name : "<<jsonInfoObject[i]["value"]["action"]<<endl;
-				cout<<"Messge name: "<<jsonInfoObject[i]["value"]["msg"]<<endl;
-				break;
+		for(size_t i=0;i<jsonInfoObject.size();i++){
+			if(key==jsonInfoObject[i]["key"]){
+				string output;
+				output+="Key Name : "+ jsonInfoObject[i]["key"]+"\n";
+				output+="Action Name : "+jsonInfoObject[i]["value"]["action"]+"\n";
+				output+="Message Name : "+jsonInfoObject[i]["value"]["msg"]+"\n";
+				return output;
 			}
 
 		}
-	}
-		if(flag==false){
-			cout<<"key not found please try again"<<endl;
-		}
-
-
-};
-void JsonApp::displayAllDetails(){
-	JsonParser parser(jsonContent);
-	JsonObject jsonObject=parser.getJsonObject();
-	JsonObject jsonAppObject=jsonObject["app"];
-	size_t size=jsonAppObject.size();
-	for(size_t i=0;i<size;i++){
-		cout<<"key : "<<jsonAppObject[i]["key"]<<endl;
-		cout<<"value : "<<jsonAppObject[i]["value"]<<endl;
+		return "Key not found please try again! \n";
 	}
 }
 
-
-
+string JsonApp::appDetailsOperation(){
+	JsonObject jsonAppObject=obj["app"];
+	string output="Displaying all app details : \n";
+	for(size_t i=0;i<jsonAppObject.size();i++){
+		output+="Key"+jsonAppObject[i]["key"]+"\n";
+		output+="Value"+jsonAppObject[i]["value"]+"\n";
+	}
+	return output;
+}
 
 
